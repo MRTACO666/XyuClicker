@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rectangle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="rectangle">
+        <button class="admin-button">Admin</button>
+        <div class="text">Xyu PRO</div>
+        <div class="button" id="mainButton"></div> <div class="counter">0</div>
+        <button class="shop-button">Shop</button>  <!-- Кнопка магазина -->
+        <div class="shop" style="display: none;">  <!-- Контейнер магазина, изначально скрыт -->
+            <div class="shop-close-button">
+                <span class="cross"></span>
+                <span class="cross"></span>
+            </div>
+            <div class="shop-content">
+                <div class="item" data-cost="1000" data-image="https://robscholtemuseum.nl/wp-content/uploads/2023/07/NATO.gif">
+                    <img src="https://robscholtemuseum.nl/wp-content/uploads/2023/07/NATO.gif" alt="Товар 1">
+                    <p>Свастон</p>
+                    <p>1К монет</p>
+                </div>
+                <div class="item" data-cost="2000" data-image="https://media.tenor.com/LXk1XrhHfJYAAAAi/betterttv-cat.gif">
+                    <img src="https://media.tenor.com/LXk1XrhHfJYAAAAi/betterttv-cat.gif" alt="Товар 2">
+                    <p>Котик</p>
+                    <p>2К монет</p>
+                </div>
+                <div class="item" data-cost="0" data-image="https://i.pinimg.com/originals/18/ca/03/18ca0307512bdc1330c87fb8ae7322a0.gif">  <!-- Добавляем бесплатный товар -->
+                    <img src="https://i.pinimg.com/originals/18/ca/03/18ca0307512bdc1330c87fb8ae7322a0.gif" alt="Товар 3">
+                    <p>Тянка</p>
+                    <p>Бесплатно</p>
+                </div>
+                <div class="item" data-cost="3000" data-image="https://media1.tenor.com/m/i0_k1MAJGPkAAAAC/aaah.gif">
+                    <img src="https://media1.tenor.com/m/i0_k1MAJGPkAAAAC/aaah.gif" alt="Товар 4">
+                    <p>🫷😫🫸</p>
+                    <p>3К монет</p>
+                </div>
+                <div class="item" data-cost="4000" data-image="https://media.tenor.com/d86y4TQvB7AAAAAi/dancing-cockroach.gif">
+                    <img src="https://media.tenor.com/d86y4TQvB7AAAAAi/dancing-cockroach.gif" alt="Товар 5">
+                    <p>Таракашка</p>
+                    <p>4К монет</p>
+                </div>
+                <div class="item" data-cost="5000" data-image="https://media1.tenor.com/m/BWB9cDCdCaUAAAAd/fnaf-five-nights-at-freddy%27s.gif">
+                    <img src="https://media1.tenor.com/m/BWB9cDCdCaUAAAAd/fnaf-five-nights-at-freddy%27s.gif" alt="Товар 6">
+                    <p>Мишко Фредэ</p>
+                    <p>5К монет</p>
+                </div>
+                <div class="item" data-cost="6000" data-image="https://media1.tenor.com/m/hxVrG04Q3W4AAAAC/shrek-funny.gif">
+                    <img src="https://media1.tenor.com/m/hxVrG04Q3W4AAAAC/shrek-funny.gif" alt="Товар 7">
+                    <p>Найк Про</p>
+                    <p>6К монет</p>
+                </div>
+                <div class="item" data-cost="7000" data-image="https://media.tenor.com/kdXxNPD43vIAAAAi/silly-cat-meme.gif">
+                    <img src="https://media.tenor.com/kdXxNPD43vIAAAAi/silly-cat-meme.gif" alt="Товар 8">
+                    <p>ЧВК Солевые</p>
+                    <p>7K монет</p>
+                </div>
+                <div class="item" data-cost="8000" data-image="https://media1.tenor.com/m/JZ_aia8T7wYAAAAC/kittycatreadfaq-readfaq.gif">
+                    <img src="https://media1.tenor.com/m/JZ_aia8T7wYAAAAC/kittycatreadfaq-readfaq.gif" alt="Товар 9">
+                    <p>Кот Хуёк</p>
+                    <p>8К монет</p>
+                </div>
+                <div class="item" data-cost="9000" data-image="https://media1.tenor.com/m/mMAILncVHgwAAAAC/1-funnie-douge-dog.gif">
+                    <img src="https://media1.tenor.com/m/mMAILncVHgwAAAAC/1-funnie-douge-dog.gif" alt="Товар 10">
+                    <p>ляля</p>
+                    <p>9К монет</p>
+                </div>
+                <div class="item" data-cost="10000" data-image="https://media1.tenor.com/m/rTohwIgEl5QAAAAd/racoon.gif">
+                    <img src="https://media1.tenor.com/m/rTohwIgEl5QAAAAd/racoon.gif" alt="Товар 11">
+                    <p>Енот</p>
+                    <p>10К монет</p>
+                </div>
+                <div class="item" data-cost="11000" data-image="https://media.tenor.com/bPaJaHgfKC8AAAAi/rock-one-eyebrow-raised-rock-staring.gif">
+                    <img src="https://media.tenor.com/bPaJaHgfKC8AAAAi/rock-one-eyebrow-raised-rock-staring.gif" alt="Товар 12">
+                    <p>Скала</p>
+                    <p>11К монет</p>
+                </div>
+                <div class="item" data-cost="12000" data-image="https://media1.tenor.com/m/eqx4UXyyELQAAAAd/cat.gif">
+                    <img src="https://media1.tenor.com/m/eqx4UXyyELQAAAAd/cat.gif" alt="Котик 2">
+                    <p>Товар 13</p>
+                    <p>12 монет</p>
+                </div>
+                <div class="item" data-cost="13000" data-image="https://media1.tenor.com/m/I9ZKdi0J3twAAAAd/doo-doo-doo.gif">
+                    <img src="https://media1.tenor.com/m/I9ZKdi0J3twAAAAd/doo-doo-doo.gif" alt="Товар 14">
+                    <p>Пупсичек</p>
+                    <p>13К монет</p>
+                </div>
+                <div class="item" data-cost="14000" data-image="https://media1.tenor.com/m/Ff6CjJDK0jsAAAAC/cute.gif">
+                    <img src="https://media1.tenor.com/m/Ff6CjJDK0jsAAAAC/cute.gif" alt="Товар 15">
+                    <p>ПЕПЕ</p>
+                    <p>14К монет</p>
+                </div>
+                <div class="item" data-cost="15000" data-image="https://media.tenor.com/aEq3lk1Z038AAAAi/sad-spongebob-sad-spongebob-gif.gif">
+                    <img src="https://media.tenor.com/aEq3lk1Z038AAAAi/sad-spongebob-sad-spongebob-gif.gif" alt="Товар 16">
+                    <p>Спэнч боб</p>
+                    <p>15К монет</p>
+                </div>
+                <div class="item" data-cost="16000" data-image="https://media1.tenor.com/images/2168f573a00f176641a07ff642d94b68/tenor.gif?itemid=18971035">
+                    <img src="https://media1.tenor.com/images/2168f573a00f176641a07ff642d94b68/tenor.gif?itemid=18971035" alt="Товар 17">
+                    <p>Товар 17</p>
+                    <p>16К монет</p>
+                </div>
+                <div class="item" data-cost="17000" data-image="https://media1.tenor.com/images/25c6f5970783706fa3092468a07b2a50/tenor.gif?itemid=14412793">
+                    <img src="https://media1.tenor.com/images/25c6f5970783706fa3092468a07b2a50/tenor.gif?itemid=14412793" alt="Товар 18">
+                    <p>Товар 18</p>
+                    <p>17К монет</p>
+                </div>
+                <div class="item" data-cost="18000" data-image="https://media1.tenor.com/images/e41300a03598b868b4815d919b21759e/tenor.gif?itemid=17179314">
+                    <img src="https://media1.tenor.com/images/e41300a03598b868b4815d919b21759e/tenor.gif?itemid=17179314" alt="Товар 19">
+                    <p>Товар 19</p>
+                    <p>18К монет</p>
+                </div>
+                <div class="item" data-cost="19000" data-image="https://media1.tenor.com/images/19544e4076f8086403771114194e9c6b/tenor.gif?itemid=15371944">
+                    <img src="https://media1.tenor.com/images/19544e4076f8086403771114194e9c6b/tenor.gif?itemid=15371944" alt="Товар 20">
+                    <p>Товар 20</p>
+                    <p>19К монет</p>
+                </div>
+                <div class="item" data-cost="20000" data-image="https://media1.tenor.com/images/920250846b83e4e8d597732d93e69152/tenor.gif?itemid=17453331">
+                    <img src="https://media1.tenor.com/images/920250846b83e4e8d597732d93e69152/tenor.gif?itemid=17453331" alt="Товар 21">
+                    <p>Товар 21</p>
+                    <p>20К монет</p>
+                </div>
+                <div class="item" data-cost="21000" data-image="https://media1.tenor.com/images/251b99052b524312c27142750c9cf24f/tenor.gif?itemid=19586212">
+                    <img src="https://media1.tenor.com/images/251b99052b524312c27142750c9cf24f/tenor.gif?itemid=19586212" alt="Товар 22">
+                    <p>Товар 22</p>
+                    <p>21К монет</p>
+                </div>
+                <div class="item" data-cost="22000" data-image="https://media1.tenor.com/images/120c399898f2b98269670b4962993e25/tenor.gif?itemid=15689771">
+                    <img src="https://media1.tenor.com/images/120c399898f2b98269670b4962993e25/tenor.gif?itemid=15689771" alt="Товар 23">
+                    <p>Товар 23</p>
+                    <p>22К монет</p>
+                </div>
+                <div class="item" data-cost="23000" data-image="https://media1.tenor.com/images/83e2d76f2e367483b08798b43f8a48a0/tenor.gif?itemid=14602873">
+                    <img src="https://media1.tenor.com/images/83e2d76f2e367483b08798b43f8a48a0/tenor.gif?itemid=14602873" alt="Товар 24">
+                    <p>Товар 24</p>
+                    <p>23К монет</p>
+                </div>
+                <div class="item" data-cost="24000" data-image="https://media1.tenor.com/images/1111565942349078578/tenor.gif?itemid=17335913">
+                    <img src="https://media1.tenor.com/images/1111565942349078578/tenor.gif?itemid=17335913" alt="Товар 25">
+                    <p>Товар 25</p>
+                    <p>24К монет</p>
+                </div>
+                <div class="item" data-cost="25000" data-image="https://media1.tenor.com/images/35015872ba039ab94875164d4f792165/tenor.gif?itemid=16614028">
+                    <img src="https://media1.tenor.com/images/35015872ba039ab94875164d4f792165/tenor.gif?itemid=16614028" alt="Товар 26">
+                    <p>Товар 26</p>
+                    <p>25К монет</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="menu-button">
+        <span class="bars"></span> 
+        <span class="bars"></span>
+        <span class="bars"></span>
+    </div>
+    <div class="overlay"></div>
+    <div class="close-button">
+        <span class="cross"></span>
+        <span class="cross"></span>
+    </div>
+    <script src="script.js"></script>
+</body>
+                      </html>
