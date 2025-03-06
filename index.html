@@ -2,16 +2,39 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>XYU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полноэкранная кнопка</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 50%;
+            overflow: hidden;
+        }
+        .fullscreen-button {
+            background-image: url('https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9'); /* Замените на вашу ссылку */
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1></h1>
-    <p></p>
-    
+
+    <button class="fullscreen-button" onclick="playMusic('название_вашего_файла.mp3')"></button>
+
+    <audio id="audio" preload="auto"></audio>
+
     <script>
-        setInterval(function() {
-            window.open('https://xyu-clicker.vercel.app/', '_blank');
-        }, 1);
+        function playMusic(filename) {
+            var audio = document.getElementById('audio');
+            audio.src = filename; // Устанавливаем источник аудио на основе имени файла
+            audio.volume = 1.0; // Установите громкость на максимум
+            audio.play();
+        }
     </script>
+
 </body>
 </html>
