@@ -37,13 +37,17 @@
     </button>
 
     <script>
-        let score = 0;
+        let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
         const scoreDisplay = document.getElementById('score');
         const clickButton = document.getElementById('clickButton');
+
+        // Обновить отображение счёта
+        scoreDisplay.textContent = 'Счёт: ' + score;
 
         clickButton.addEventListener('click', () => {
             score++;
             scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score); // Сохранить новый счёт в localStorage
         });
     </script>
 
