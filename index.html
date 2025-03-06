@@ -3,37 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Полноэкранная кнопка</title>
+    <title>Кликер Игра</title>
     <style>
-        body, html {
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            height: 50%;
-            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
-        .fullscreen-button {
-            background-image: url('https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9'); /* Замените на вашу ссылку */
-            background-size: cover;
-            width: 100%;
-            height: 100%;
+        #score {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #clickButton {
             border: none;
+            background: none;
             cursor: pointer;
+        }
+        #clickButton img {
+            width: 200px; /* Задайте нужный размер */
+            height: auto;
         }
     </style>
 </head>
 <body>
 
-    <button class="fullscreen-button" onclick="playMusic('music_1_1_1_1_1.mp3')"></button>
-
-    <audio id="audio" preload="auto"></audio>
+    <div id="score">Счёт: 0</div>
+    <button id="clickButton">
+        <img src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Кликни меня!">
+    </button>
 
     <script>
-        function playMusic(filename) {
-            var audio = document.getElementById('audio');
-            audio.src = filename; // Устанавливаем источник аудио на основе имени файла
-            audio.volume = 1.0; // Установите громкость на максимум
-            audio.play();
-        }
+        let score = 0;
+        const scoreDisplay = document.getElementById('score');
+        const clickButton = document.getElementById('clickButton');
+
+        clickButton.addEventListener('click', () => {
+            score++;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+        });
     </script>
 
 </body>
