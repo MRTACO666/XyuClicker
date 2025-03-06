@@ -27,6 +27,48 @@
             width: 200px; /* Задайте нужный размер */
             height: auto;
         }
+        #passwordButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #passwordModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .bonusButton {
+            display: none;
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .addScore {
+            background-color: green;
+        }
+        .resetScore {
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -35,17 +77,69 @@
     <button id="clickButton">
         <img src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Кликни меня!">
     </button>
+    <button id="passwordButton">🔒</button>
+
+    <div id="overlay"></div>
+    <div id="passwordModal">
+        <h3>Введите пароль</h3>
+        <input type="password" id="passwordInput" />
+        <button id="submitPassword">Подтвердить</button>
+        <button id="closeModal">Закрыть</button>
+    </div>
+
+    <button class="bonusButton addScore">Добавить 1000</button>
+    <button class="bonusButton resetScore">Обнулить счёт</button>
 
     <script>
         let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
         const scoreDisplay = document.getElementById('score');
         const clickButton = document.getElementById('clickButton');
+        const passwordButton = document.getElementById('passwordButton');
+        const passwordModal = document.getElementById('passwordModal');
+        const overlay = document.getElementById('overlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const addScoreButton = document.querySelector('.addScore');
+        const resetScoreButton = document.querySelector('.resetScore');
 
         // Обновить отображение счёта
         scoreDisplay.textContent = 'Счёт: ' + score;
 
         clickButton.addEventListener('click', () => {
             score++;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score); // Сохранить новый счёт в localStorage
+        });
+
+        passwordButton.addEventListener('click', () => {
+            overlay.style.display = 'block';
+            passwordModal.style.display = 'block';
+        });
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            overlay.style.display = 'none';
+            passwordModal.style.display = 'none';
+        });
+
+        document.getElementById('submitPassword').addEventListener('click', () => {
+            if (passwordInput.value === 'АбуБандит') {
+                addScoreButton.style.display = 'inline-block';
+                resetScoreButton.style.display = 'inline-block';
+                passwordInput.value = '';
+                overlay.style.display = 'none';
+                passwordModal.style.display = 'none';
+            } else {
+                alert('Неправильный пароль!');
+            }
+        });
+
+        addScoreButton.addEventListener('click', () => {
+            score += 1000;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score); // Сохранить новый счёт в localStorage
+        });
+
+        resetScoreButton.addEventListener('click', () => {
+            score = 0;
             scoreDisplay.textContent = 'Счёт: ' + score;
             localStorage.setItem('score', score); // Сохранить новый счёт в localStorage
         });
