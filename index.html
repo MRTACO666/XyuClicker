@@ -28,13 +28,314 @@
             width: 200px; /* Задайте нужный размер */
             height: auto;
         }
-        #passwordButton, #shopButton, #wardrobeButton {
+        #passwordButton, #shopButton, #wardrobeButton, #linkButton {
             position: absolute;
             top: 10px;
             padding: 10px;
             cursor: pointer;
         }
         #shopButton {
+            right: 140px; /* Позиция для кнопки магазина */
+        }
+        #wardrobeButton {
+            right: 70px; /* Позиция для кнопки гардеробной */
+        }
+        #linkButton {
+            right: 10px; /* Позиция для кнопки ссылки */
+        }
+        #passwordModal, #shopModal, #wardrobeModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .bonusButton {
+            display: none;
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .addScore {
+            background-color: green;
+        }
+        .resetScore {
+            background-color: red;
+        }
+        .shopItem, .wardrobeItem {
+            margin: 10px 0;
+        }
+        #wardrobeItems {
+            max-height: 200px; /* Высота для прокрутки */
+            overflow-y: auto; /* Включаем прокрутку */
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="score">Счёт: 0</div>
+    <button id="clickButton">
+        <img id="clickImage" src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Кликни меня!">
+    </button>
+    <button id="passwordButton">🔒</button>
+    <button id="shopButton">🛒</button>
+    <button id="wardrobeButton">👗</button>
+    <button id="linkButton">🔗</button>
+
+    <div id="overlay"></div>
+    <div id="passwordModal">
+        <h3>Введите пароль</h3>
+        <input type="password" id="passwordInput" />
+        <button id="submitPassword">Подтвердить</button>
+        <button id="closePasswordModal">Закрыть</button>
+        <h3>Изменение баланса</h3>
+        <input type="password" id="adminPasswordInput" placeholder="Введите пароль для изменения баланса" />
+        <input type="number" id="newBalanceInput" placeholder="Новый баланс" />
+        <button id="setBalanceButton">Установить баланс</button>
+    </div>
+
+    <div id="shopModal">
+        <h3>Магазин</h3>
+        <div class="shopItem">1 нажатие = 3 очка <button id="buyPoints">Купить за 100 очков</button></div>
+        <div class="shopItem">Желтый Campus <button id="buyRainbowImage">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 1 <button id="buySkin1">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 2 <button id="buySkin2">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 3 <button id="buySkin3">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 4 <button id="buySkin4">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 5 <button id="buySkin5">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 6 <button id="buySkin6">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 7 <button id="buySkin7">Купить за 200 очков</button></div>
+        <div class="shopItem">Скин 8 <button id="buySkin8">Купить за 200 очков</button></div>
+        <button id="closeShopModal">Закрыть</button>
+    </div>
+
+    <div id="wardrobeModal">
+        <h3>Гардеробная</h3>
+        <div class="wardrobeItem" id="wardrobeItems"></div>
+        <button id="closeWardrobeModal">Закрыть</button>
+    </div>
+
+    <button class="bonusButton addScore">Добавить 1000</button>
+    <button class="bonusButton resetScore">Обнулить счёт</button>
+
+    <script>
+        let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
+        let linkClicked = false;
+
+        const scoreDisplay = document.getElementById('score');
+        const clickButton = document.getElementById('clickButton');
+        const clickImage = document.getElementById('clickImage');
+        const passwordButton = document.getElementById('passwordButton');
+        const shopButton = document.getElementById('shopButton');
+        const wardrobeButton = document.getElementById('wardrobeButton');
+        const linkButton = document.getElementById('linkButton');
+        const passwordModal = document.getElementById('passwordModal');
+        const shopModal = document.getElementById('shopModal');
+        const wardrobeModal = document.getElementById('wardrobeModal');
+        const overlay = document.getElementById('overlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const addScoreButton = document.querySelector('.addScore');
+        const resetScoreButton = document.querySelector('.resetScore');
+        const setBalanceButton = document.getElementById('setBalanceButton');
+        const adminPasswordInput = document.getElementById('adminPasswordInput');
+        const newBalanceInput = document.getElementById('newBalanceInput');
+
+        let pointsBoostActive = false;
+        let wardrobe = JSON.parse(localStorage.getItem('wardrobe')) || [];
+
+        scoreDisplay.textContent = 'Счёт: ' + score;
+
+        clickButton.addEventListener('click', () => {
+            score += pointsBoostActive ? 3 : 1;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score);
+        });
+
+        passwordButton.addEventListener('click', () => {
+            overlay.style.display = 'block';
+            passwordModal.style.display = 'block';
+        });
+
+        shopButton.addEventListener('click', () => {
+            overlay.style.display = 'block';
+            shopModal.style.display = 'block';
+        });
+
+        wardrobeButton.addEventListener('click', () => {
+            overlay.style.display = 'block';
+            wardrobeModal.style.display = 'block';
+            displayWardrobeItems();
+        });
+
+        linkButton.addEventListener('click', () => {
+            if (!linkClicked) {
+                window.open('https://t.me/XYU_Project', '_blank');
+                score += 300;
+                scoreDisplay.textContent = 'Счёт: ' + score;
+                localStorage.setItem('score', score);
+                linkClicked = true;
+                alert('Вы получили 300 очков за переход в канал!');
+            } else {
+                alert('Вы уже перешли в канал!');
+            }
+        });
+
+        document.getElementById('closePasswordModal').addEventListener('click', () => {
+            overlay.style.display = 'none';
+            passwordModal.style.display = 'none';
+        });
+
+        document.getElementById('closeShopModal').addEventListener('click', () => {
+            overlay.style.display = 'none';
+            shopModal.style.display = 'none';
+        });
+
+        document.getElementById('closeWardrobeModal').addEventListener('click', () => {
+            overlay.style.display = 'none';
+            wardrobeModal.style.display = 'none';
+        });
+
+        document.getElementById('submitPassword').addEventListener('click', () => {
+            if (passwordInput.value === 'АбуБандит') {
+                addScoreButton.style.display = 'inline-block';
+                resetScoreButton.style.display = 'inline-block';
+                passwordInput.value = '';
+                overlay.style.display = 'none';
+                passwordModal.style.display = 'none';
+            } else {
+                alert('Неправильный пароль!');
+            }
+        });
+
+        addScoreButton.addEventListener('click', () => {
+            score += 1000;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score);
+        });
+
+        resetScoreButton.addEventListener('click', () => {
+            score = 0;
+            scoreDisplay.textContent = 'Счёт: ' + score;
+            localStorage.setItem('score', score);
+        });
+
+        // Магазин
+        document.getElementById('buyPoints').addEventListener('click', () => {
+            if (score >= 100) {
+                score -= 100;
+                scoreDisplay.textContent = 'Счёт: ' + score;
+                localStorage.setItem('score', score);
+                pointsBoostActive = true;
+                alert('Вы купили "1 нажатие = 3 очка"!');
+            } else {
+                alert('Недостаточно очков!');
+            }
+        });
+
+        document.getElementById('buyRainbowImage').addEventListener('click', () => {
+            buySkin('https://cdn.poizon.com/pro-img/origin-img/20230304/2f48bf158c244a9caf69ac8bb06d8345.jpg', 200);
+        });
+
+        // Добавляем обработчики для других скинов
+        document.getElementById('buySkin1').addEventListener('click', () => {
+            buySkin('https://img.joomcdn.net/0bb55366699505914c1b68ee339024ae50b5c1ae_original.jpeg', 200);
+        });
+        document.getElementById('buySkin2').addEventListener('click', () => {
+            buySkin('https://avatars.mds.yandex.net/get-mpic/4412310/img_id5219355862748966298.jpeg/600x800', 200);
+        });
+        document.getElementById('buySkin3').addEventListener('click', () => {
+            buySkin('https://i.ebayimg.com/00/s/MTUwNFgxNjAw/z/PTcAAOSwSxNmompf/$_57.JPG?set_id=8800005007', 200);
+        });
+        document.getElementById('buySkin4').addEventListener('click', () => {
+            buySkin('https://frankfurt.apollo.olxcdn.com/v1/files/of16qrhs01e5-KZ/image', 200);
+        });
+        document.getElementById('buySkin5').addEventListener('click', () => {
+            buySkin('https://blog.sneakerhead.ru/content/images/size/w1000/2022/11/--------------2022-11-22---02.07.53.png', 200);
+        });
+        document.getElementById('buySkin6').addEventListener('click', () => {
+            buySkin('https://i.ebayimg.com/images/g/1FsAAOSw9ZpivsHi/s-l500.jpg', 200);
+        });
+        document.getElementById('buySkin7').addEventListener('click', () => {
+            buySkin('https://i.pinimg.com/originals/e2/d4/0a/e2d40a0e0c6253bca387656dfbec2b33.png', 200);
+        });
+        document.getElementById('buySkin8').addEventListener('click', () => {
+            buySkin('https://avatars.mds.yandex.net/i?id=9da6b566295f6cb65b3cbc588a051368_l-5232384-images-thumbs&n=33&w=1911&h=1080', 200);
+        });
+
+        function buySkin(image, price) {
+            if (score >= price) {
+                score -= price;
+                scoreDisplay.textContent = 'Счёт: ' + score;
+                localStorage.setItem('score', score);
+                wardrobe.push(image);
+                localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
+                alert('Вы купили скин!');
+            } else {
+                alert('Недостаточно очков!');
+            }
+        }
+
+        function displayWardrobeItems() {
+            const wardrobeItemsContainer = document.getElementById('wardrobeItems');
+            wardrobeItemsContainer.innerHTML = ''; // Очищаем контейнер
+
+            // Добавляем начальный скин
+            const defaultSkinItem = document.createElement('div');
+            defaultSkinItem.innerHTML = `<img src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Начальный скин" style="width: 100px; height: auto; cursor: pointer; margin: 5px;" />`;
+            defaultSkinItem.addEventListener('click', () => {
+                clickImage.src = 'https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9'; // Меняем на начальный скин
+                wardrobeModal.style.display = 'none'; // Закрываем гардеробную
+                overlay.style.display = 'none'; // Закрываем оверлей
+            });
+            wardrobeItemsContainer.appendChild(defaultSkinItem);
+
+            // Добавляем купленные скины
+            wardrobe.forEach(image => {
+                const item = document.createElement('div');
+                item.innerHTML = `<img src="${image}" alt="Скин" style="width: 100px; height: auto; cursor: pointer; margin: 5px;" />`;
+                item.addEventListener('click', () => {
+                    clickImage.src = image; // Меняем изображение кнопки
+                    wardrobeModal.style.display = 'none'; // Закрываем гардеробную
+                    overlay.style.display = 'none'; // Закрываем оверлей
+                });
+                wardrobeItemsContainer.appendChild(item);
+            });
+        }
+
+        setBalanceButton.addEventListener('click', () => {
+            const newBalance = parseInt(newBalanceInput.value);
+            if (adminPasswordInput.value === 'ГигаЧад') {
+                score = newBalance;
+                scoreDisplay.textContent = 'Счёт: ' + score;
+                localStorage.setItem('score', score);
+                adminPasswordInput.value = '';
+                newBalanceInput.value = '';
+                alert('Баланс успешно изменён!');
+            } else {
+                alert('Неправильный пароль!');
+            }
+        });
+    </script>
+
+</body>
+</html>        #shopButton {
             right: 70px; /* Позиция для кнопки магазина */
         }
         #wardrobeButton {
