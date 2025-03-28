@@ -1,59 +1,98 @@
-
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XYU Clicker</title>
     <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --dark-color: #1a1a2e;
+            --darker-color: #16213e;
+            --text-color: #f1f1f1;
+            --accent-color: #00cec9;
+            --danger-color: #ff7675;
+            --success-color: #55efc4;
+        }
+        
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
+        
         #score {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+            color: var(--accent-color);
         }
+        
         #clickButton {
             border: none;
             background: none;
             cursor: pointer;
+            transition: transform 0.1s ease;
+            margin-bottom: 2rem;
         }
+        
+        #clickButton:active {
+            transform: scale(0.95);
+        }
+        
         #clickButton img {
-            width: 200px; /* Задайте нужный размер */
-            height: auto;
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            object-fit: cover;
         }
-        #passwordButton, #shopButton, #wardrobeButton, #linkButton {
-            position: absolute;
-            top: 10px;
-            padding: 10px;
-            cursor: pointer;
+        
+        #clickButton img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
-        #shopButton {
-            right: 140px; /* Позиция для кнопки магазина */
-        }
-        #wardrobeButton {
-            right: 70px; /* Позиция для кнопки гардеробной */
-        }
-        #linkButton {
-            right: 10px; /* Позиция для кнопки ссылки */
-        }
-        #passwordModal, #shopModal, #wardrobeModal {
-            display: none;
+        
+        .action-buttons {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 1px solid #ccc;
-            padding: 20px;
-            z-index: 1000;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
         }
+        
+        .action-button {
+            background-color: var(--darker-color);
+            border: none;
+            color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-button:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
         #overlay {
             display: none;
             position: fixed;
@@ -61,78 +100,302 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 999;
+            backdrop-filter: blur(5px);
         }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--darker-color);
+            border-radius: 15px;
+            padding: 25px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content {
+            margin-bottom: 20px;
+        }
+        
+        .modal-close {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .modal-close:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+        
+        input[type="password"], 
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        
+        .modal-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .modal-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .shopItem, .wardrobeItem {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .shopItem:hover, .wardrobeItem:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+        
+        .shopItem button, .wardrobeItem button {
+            background-color: var(--success-color);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .shopItem button:hover, .wardrobeItem button:hover {
+            background-color: #00b894;
+            transform: translateY(-2px);
+        }
+        
+        #wardrobeItems {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .skin-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .skin-item:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+        
+        .skin-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
         .bonusButton {
             display: none;
             margin: 10px;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
+            border-radius: 5px;
             color: white;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        
         .addScore {
-            background-color: green;
+            background-color: var(--success-color);
+            color: #000;
         }
+        
         .resetScore {
-            background-color: red;
+            background-color: var(--danger-color);
         }
-        .shopItem, .wardrobeItem {
-            margin: 10px 0;
+        
+        .bonusButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-        #wardrobeItems {
-            max-height: 200px; /* Высота для прокрутки */
-            overflow-y: auto; /* Включаем прокрутку */
-            margin-bottom: 10px;
+        
+        .addScore:hover {
+            background-color: #00b894;
+        }
+        
+        .resetScore:hover {
+            background-color: #d63031;
+        }
+        
+        @media (max-width: 600px) {
+            #score {
+                font-size: 2rem;
+            }
+            
+            #clickButton img {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .action-button {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .modal {
+                width: 95%;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="score">Счёт: 0</div>
+    <div id="score">0</div>
     <button id="clickButton">
         <img id="clickImage" src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Кликни меня!">
     </button>
-    <button id="passwordButton">🔒</button>
-    <button id="shopButton">🛒</button>
-    <button id="wardrobeButton">👗</button>
-    <button id="linkButton">🔗</button>
+
+    <div class="action-buttons">
+        <button id="passwordButton" class="action-button" title="Админ-панель">🔒</button>
+        <button id="shopButton" class="action-button" title="Магазин">🛒</button>
+        <button id="wardrobeButton" class="action-button" title="Гардероб">👗</button>
+        <button id="linkButton" class="action-button" title="Наш канал">🔗</button>
+    </div>
 
     <div id="overlay"></div>
-    <div id="passwordModal">
-        <h3>Введите пароль</h3>
-        <input type="password" id="passwordInput" />
-        <button id="submitPassword">Подтвердить</button>
-        <button id="closePasswordModal">Закрыть</button>
-        <h3>Изменение баланса</h3>
-        <input type="password" id="adminPasswordInput" placeholder="Введите пароль для изменения баланса" />
-        <input type="number" id="newBalanceInput" placeholder="Новый баланс" />
-        <button id="setBalanceButton">Установить баланс</button>
+    
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+        <h3>Админ-панель</h3>
+        <div class="modal-content">
+            <h4>Введите пароль</h4>
+            <input type="password" id="passwordInput" placeholder="Введите пароль..." />
+            <button id="submitPassword" class="modal-button">Подтвердить</button>
+            
+            <h4>Изменение баланса</h4>
+            <input type="password" id="adminPasswordInput" placeholder="Пароль администратора" />
+            <input type="number" id="newBalanceInput" placeholder="Новый баланс" />
+            <button id="setBalanceButton" class="modal-button">Установить баланс</button>
+        </div>
+        <button id="closePasswordModal" class="modal-close">Закрыть</button>
     </div>
 
-    <div id="shopModal">
+    <!-- Shop Modal -->
+    <div id="shopModal" class="modal">
         <h3>Магазин</h3>
-        <div class="shopItem">1 нажатие = 3 очка <button id="buyPoints">Купить за 100 очков</button></div>
-        <div class="shopItem">Желтый Campus <button id="buyRainbowImage">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 1 <button id="buySkin1">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 2 <button id="buySkin2">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 3 <button id="buySkin3">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 4 <button id="buySkin4">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 5 <button id="buySkin5">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 6 <button id="buySkin6">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 7 <button id="buySkin7">Купить за 200 очков</button></div>
-        <div class="shopItem">Скин 8 <button id="buySkin8">Купить за 200 очков</button></div>
-        <button id="closeShopModal">Закрыть</button>
+        <div class="modal-content">
+            <div class="shopItem">
+                <span>1 нажатие = 3 очка</span>
+                <button id="buyPoints">100 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Желтый Campus</span>
+                <button id="buyRainbowImage">200 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 1</span>
+                <button id="buySkin1">300 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 2</span>
+                <button id="buySkin2">400 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 3</span>
+                <button id="buySkin3">500 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 4</span>
+                <button id="buySkin4">600 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 5</span>
+                <button id="buySkin5">700 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 6</span>
+                <button id="buySkin6">800 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 7</span>
+                <button id="buySkin7">900 очков</button>
+            </div>
+            <div class="shopItem">
+                <span>Скин 8</span>
+                <button id="buySkin8">1000 очков</button>
+            </div>
+        </div>
+        <button id="closeShopModal" class="modal-close">Закрыть</button>
     </div>
 
-    <div id="wardrobeModal">
-        <h3>Гардеробная</h3>
-        <div class="wardrobeItem" id="wardrobeItems"></div>
-        <button id="closeWardrobeModal">Закрыть</button>
+    <!-- Wardrobe Modal -->
+    <div id="wardrobeModal" class="modal">
+        <h3>Гардероб</h3>
+        <div class="modal-content">
+            <div id="wardrobeItems" class="wardrobe-grid"></div>
+        </div>
+        <button id="closeWardrobeModal" class="modal-close">Закрыть</button>
     </div>
 
-    <button class="bonusButton addScore">Добавить 1000</button>
+    <button class="bonusButton addScore">+1000 очков</button>
     <button class="bonusButton resetScore">Обнулить счёт</button>
 
     <script>
@@ -160,17 +423,31 @@
         let pointsBoostActive = false;
         let wardrobe = JSON.parse(localStorage.getItem('wardrobe')) || [];
 
-        scoreDisplay.textContent = 'Счёт: ' + score;
+        // Обновляем отображение счета
+        function updateScore() {
+            scoreDisplay.textContent = score;
+            localStorage.setItem('score', score);
+        }
 
+        updateScore();
+
+        // Обработчик клика по основной кнопке
         clickButton.addEventListener('click', () => {
             score += pointsBoostActive ? 3 : 1;
-            scoreDisplay.textContent = 'Счёт: ' + score;
-            localStorage.setItem('score', score);
+            updateScore();
+            
+            // Анимация клика
+            clickButton.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                clickButton.style.transform = 'scale(1)';
+            }, 100);
         });
 
+        // Открытие модальных окон
         passwordButton.addEventListener('click', () => {
             overlay.style.display = 'block';
             passwordModal.style.display = 'block';
+            passwordInput.focus();
         });
 
         shopButton.addEventListener('click', () => {
@@ -184,19 +461,56 @@
             displayWardrobeItems();
         });
 
+        // Обработчик для кнопки ссылки
         linkButton.addEventListener('click', () => {
             if (!linkClicked) {
                 window.open('https://t.me/XYU_Project', '_blank');
                 score += 300;
-                scoreDisplay.textContent = 'Счёт: ' + score;
-                localStorage.setItem('score', score);
+                updateScore();
                 linkClicked = true;
-                alert('Вы получили 300 очков за переход в канал!');
+                
+                // Красивое уведомление
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.left = '50%';
+                notification.style.transform = 'translateX(-50%)';
+                notification.style.backgroundColor = 'var(--success-color)';
+                notification.style.color = '#000';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '5px';
+                notification.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+                notification.style.zIndex = '1001';
+                notification.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
+                notification.textContent = '🎉 Вы получили 300 очков за переход в канал!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
             } else {
-                alert('Вы уже перешли в канал!');
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.left = '50%';
+                notification.style.transform = 'translateX(-50%)';
+                notification.style.backgroundColor = 'var(--danger-color)';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '5px';
+                notification.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+                notification.style.zIndex = '1001';
+                notification.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
+                notification.textContent = 'Вы уже перешли в канал!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
             }
         });
 
+        // Закрытие модальных окон
         document.getElementById('closePasswordModal').addEventListener('click', () => {
             overlay.style.display = 'none';
             passwordModal.style.display = 'none';
@@ -212,6 +526,15 @@
             wardrobeModal.style.display = 'none';
         });
 
+        // Закрытие по клику на оверлей
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            passwordModal.style.display = 'none';
+            shopModal.style.display = 'none';
+            wardrobeModal.style.display = 'none';
+        });
+
+        // Проверка пароля
         document.getElementById('submitPassword').addEventListener('click', () => {
             if (passwordInput.value === 'АбуБандит') {
                 addScoreButton.style.display = 'inline-block';
@@ -219,119 +542,200 @@
                 passwordInput.value = '';
                 overlay.style.display = 'none';
                 passwordModal.style.display = 'none';
+                
+                // Анимация появления кнопок
+                addScoreButton.style.animation = 'fadeIn 0.5s';
+                resetScoreButton.style.animation = 'fadeIn 0.5s';
             } else {
-                alert('Неправильный пароль!');
+                passwordInput.style.border = '2px solid var(--danger-color)';
+                setTimeout(() => {
+                    passwordInput.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                }, 1000);
             }
         });
 
+        // Бонусные кнопки
         addScoreButton.addEventListener('click', () => {
             score += 1000;
-            scoreDisplay.textContent = 'Счёт: ' + score;
-            localStorage.setItem('score', score);
+            updateScore();
+            
+            // Анимация
+            scoreDisplay.style.transform = 'scale(1.2)';
+            scoreDisplay.style.color = 'var(--success-color)';
+            setTimeout(() => {
+                scoreDisplay.style.transform = 'scale(1)';
+                scoreDisplay.style.color = 'var(--accent-color)';
+            }, 500);
         });
 
         resetScoreButton.addEventListener('click', () => {
             score = 0;
-            scoreDisplay.textContent = 'Счёт: ' + score;
-            localStorage.setItem('score', score);
+            updateScore();
+            
+            // Анимация
+            scoreDisplay.style.transform = 'scale(0.8)';
+            scoreDisplay.style.color = 'var(--danger-color)';
+            setTimeout(() => {
+                scoreDisplay.style.transform = 'scale(1)';
+                scoreDisplay.style.color = 'var(--accent-color)';
+            }, 500);
         });
 
         // Магазин
         document.getElementById('buyPoints').addEventListener('click', () => {
             if (score >= 100) {
                 score -= 100;
-                scoreDisplay.textContent = 'Счёт: ' + score;
-                localStorage.setItem('score', score);
+                updateScore();
                 pointsBoostActive = true;
-                alert('Вы купили "1 нажатие = 3 очка"!');
+                
+                // Уведомление
+                showNotification('Улучшение куплено! Теперь клики дают 3 очка', 'var(--success-color)');
             } else {
-                alert('Недостаточно очков!');
+                showNotification('Недостаточно очков!', 'var(--danger-color)');
             }
         });
 
+        // Покупка скинов
         document.getElementById('buyRainbowImage').addEventListener('click', () => {
             buySkin('https://cdn.poizon.com/pro-img/origin-img/20230304/2f48bf158c244a9caf69ac8bb06d8345.jpg', 200);
         });
 
-        // Добавляем обработчики для других скинов
         document.getElementById('buySkin1').addEventListener('click', () => {
-            buySkin('https://img.joomcdn.net/0bb55366699505914c1b68ee339024ae50b5c1ae_original.jpeg', 200);
+            buySkin('https://img.joomcdn.net/0bb55366699505914c1b68ee339024ae50b5c1ae_original.jpeg', 300);
         });
         document.getElementById('buySkin2').addEventListener('click', () => {
-            buySkin('https://avatars.mds.yandex.net/get-mpic/4412310/img_id5219355862748966298.jpeg/600x800', 200);
+            buySkin('https://avatars.mds.yandex.net/get-mpic/4412310/img_id5219355862748966298.jpeg/600x800', 400);
         });
         document.getElementById('buySkin3').addEventListener('click', () => {
-            buySkin('https://i.ebayimg.com/00/s/MTUwNFgxNjAw/z/PTcAAOSwSxNmompf/$_57.JPG?set_id=8800005007', 200);
+            buySkin('https://i.ebayimg.com/00/s/MTUwNFgxNjAw/z/PTcAAOSwSxNmompf/$_57.JPG?set_id=8800005007', 500);
         });
         document.getElementById('buySkin4').addEventListener('click', () => {
-            buySkin('https://frankfurt.apollo.olxcdn.com/v1/files/of16qrhs01e5-KZ/image', 200);
+            buySkin('https://frankfurt.apollo.olxcdn.com/v1/files/of16qrhs01e5-KZ/image', 600);
         });
         document.getElementById('buySkin5').addEventListener('click', () => {
-            buySkin('https://blog.sneakerhead.ru/content/images/size/w1000/2022/11/--------------2022-11-22---02.07.53.png', 200);
+            buySkin('https://blog.sneakerhead.ru/content/images/size/w1000/2022/11/--------------2022-11-22---02.07.53.png',
+            700);
         });
         document.getElementById('buySkin6').addEventListener('click', () => {
-            buySkin('https://i.ebayimg.com/images/g/1FsAAOSw9ZpivsHi/s-l500.jpg', 200);
+            buySkin('https://i.ebayimg.com/images/g/1FsAAOSw9ZpivsHi/s-l500.jpg', 800);
         });
         document.getElementById('buySkin7').addEventListener('click', () => {
-            buySkin('https://i.pinimg.com/originals/e2/d4/0a/e2d40a0e0c6253bca387656dfbec2b33.png', 200);
+            buySkin('https://i.pinimg.com/originals/e2/d4/0a/e2d40a0e0c6253bca387656dfbec2b33.png', 900);
         });
         document.getElementById('buySkin8').addEventListener('click', () => {
-            buySkin('https://avatars.mds.yandex.net/i?id=9da6b566295f6cb65b3cbc588a051368_l-5232384-images-thumbs&n=33&w=1911&h=1080', 200);
+            buySkin('https://avatars.mds.yandex.net/i?id=9da6b566295f6cb65b3cbc588a051368_l-5232384-images-thumbs&n=33&w=1911&h=1080', 1000);
         });
 
         function buySkin(image, price) {
             if (score >= price) {
                 score -= price;
-                scoreDisplay.textContent = 'Счёт: ' + score;
-                localStorage.setItem('score', score);
-                wardrobe.push(image);
-                localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
-                alert('Вы купили скин!');
+                updateScore();
+                
+                // Проверяем, есть ли уже такой скин
+                if (!wardrobe.includes(image)) {
+                    wardrobe.push(image);
+                    localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
+                    showNotification('Скин куплен!', 'var(--success-color)');
+                } else {
+                    showNotification('Этот скин уже у вас есть!', 'var(--secondary-color)');
+                }
             } else {
-                alert('Недостаточно очков!');
+                showNotification('Недостаточно очков!', 'var(--danger-color)');
             }
         }
 
         function displayWardrobeItems() {
             const wardrobeItemsContainer = document.getElementById('wardrobeItems');
-            wardrobeItemsContainer.innerHTML = ''; // Очищаем контейнер
+            wardrobeItemsContainer.innerHTML = '';
 
             // Добавляем начальный скин
             const defaultSkinItem = document.createElement('div');
-            defaultSkinItem.innerHTML = `<img src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Начальный скин" style="width: 100px; height: auto; cursor: pointer; margin: 5px;" />`;
+            defaultSkinItem.className = 'skin-item';
+            defaultSkinItem.innerHTML = `<img src="https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9" alt="Начальный скин" />`;
             defaultSkinItem.addEventListener('click', () => {
-                clickImage.src = 'https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9'; // Меняем на начальный скин
-                wardrobeModal.style.display = 'none'; // Закрываем гардеробную
-                overlay.style.display = 'none'; // Закрываем оверлей
+                clickImage.src = 'https://a.allegroimg.com/s1024/0cfed5/99636d28480aa715884f2f6499b9';
+                wardrobeModal.style.display = 'none';
+                overlay.style.display = 'none';
+                showNotification('Скин применён!', 'var(--accent-color)');
             });
             wardrobeItemsContainer.appendChild(defaultSkinItem);
 
             // Добавляем купленные скины
             wardrobe.forEach(image => {
                 const item = document.createElement('div');
-                item.innerHTML = `<img src="${image}" alt="Скин" style="width: 100px; height: auto; cursor: pointer; margin: 5px;" />`;
+                item.className = 'skin-item';
+                item.innerHTML = `<img src="${image}" alt="Скин" />`;
                 item.addEventListener('click', () => {
-                    clickImage.src = image; // Меняем изображение кнопки
-                    wardrobeModal.style.display = 'none'; // Закрываем гардеробную
-                    overlay.style.display = 'none'; // Закрываем оверлей
+                    clickImage.src = image;
+                    wardrobeModal.style.display = 'none';
+                    overlay.style.display = 'none';
+                    showNotification('Скин применён!', 'var(--accent-color)');
                 });
                 wardrobeItemsContainer.appendChild(item);
             });
         }
 
+        // Установка баланса
         setBalanceButton.addEventListener('click', () => {
             const newBalance = parseInt(newBalanceInput.value);
             if (adminPasswordInput.value === 'ГигаЧад') {
                 score = newBalance;
-                scoreDisplay.textContent = 'Счёт: ' + score;
-                localStorage.setItem('score', score);
+                updateScore();
                 adminPasswordInput.value = '';
                 newBalanceInput.value = '';
-                alert('Баланс успешно изменён!');
+                
+                // Анимация
+                scoreDisplay.style.transform = 'scale(1.3)';
+                scoreDisplay.style.color = 'var(--primary-color)';
+                setTimeout(() => {
+                    scoreDisplay.style.transform = 'scale(1)';
+                    scoreDisplay.style.color = 'var(--accent-color)';
+                }, 500);
+                
+                showNotification('Баланс изменён!', 'var(--success-color)');
             } else {
-                alert('Неправильный пароль!');
+                adminPasswordInput.style.border = '2px solid var(--danger-color)';
+                setTimeout(() => {
+                    adminPasswordInput.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                }, 1000);
             }
         });
+
+        // Функция для показа уведомлений
+        function showNotification(message, color) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = color;
+            notification.style.color = color === 'var(--success-color)' ? '#000' : 'white';
+            notification.style.padding = '15px 25px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+            notification.style.zIndex = '1001';
+            notification.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Добавляем стили для анимаций
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 
 </body>
